@@ -125,44 +125,38 @@ const ScatterPlot = ({ data }) => {
             </div>
           </div>
 
-          {/* Tableau descriptif */}
-          <div className="overflow-x-auto mt-2">
-            <table className="w-full text-sm border-collapse">
-              <thead>
-                <tr className="bg-gray-50">
-                  <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Article</th>
-                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Taille (octets)</th>
-                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Temps (ms)</th>
-                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Ratio</th>
-                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Statut</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((d, i) => {
-                  const maxRatio = Math.max(...data.map(x => x.ratio));
-                  const normalized = d.ratio / maxRatio;
-                  const statut = normalized > 0.66
-                    ? { label: 'Lent', bg: 'bg-red-100', text: 'text-red-700' }
-                    : normalized > 0.33
-                    ? { label: 'Moyen', bg: 'bg-amber-100', text: 'text-amber-700' }
-                    : { label: 'Rapide', bg: 'bg-emerald-100', text: 'text-emerald-700' };
-                  return (
-                    <tr key={i} className="hover:bg-gray-50 transition-colors">
-                      <td className="px-3 py-2 border border-gray-200 font-medium text-gray-800 truncate max-w-[200px]">{d.title}</td>
-                      <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{d.size.toLocaleString()}</td>
-                      <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{d.responseTime.toFixed(0)}</td>
-                      <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{(d.ratio * 1000).toFixed(2)}</td>
-                      <td className="px-3 py-2 border border-gray-200 text-center">
-                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statut.bg} ${statut.text}`}>
-                          {statut.label}
-                        </span>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          {/* Tableau - seulement les articles lents */}
+          {data.some(d => d.ratio / Math.max(...data.map(x => x.ratio)) > 0.66) && (
+            <div className="overflow-x-auto mt-2">
+              <p className="text-xs font-semibold text-red-600 mb-2">Articles nécessitant attention :</p>
+              <table className="w-full text-sm border-collapse">
+                <thead>
+                  <tr className="bg-red-50">
+                    <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Article</th>
+                    <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Taille (octets)</th>
+                    <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Temps (ms)</th>
+                    <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Ratio</th>
+                    <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Statut</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data
+                    .filter(d => d.ratio / Math.max(...data.map(x => x.ratio)) > 0.66)
+                    .map((d, i) => (
+                      <tr key={i} className="hover:bg-red-50 transition-colors">
+                        <td className="px-3 py-2 border border-gray-200 font-medium text-gray-800 truncate max-w-[200px]">{d.title}</td>
+                        <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{d.size.toLocaleString()}</td>
+                        <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{d.responseTime.toFixed(0)}</td>
+                        <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{(d.ratio * 1000).toFixed(2)}</td>
+                        <td className="px-3 py-2 border border-gray-200 text-center">
+                          <span className="px-2 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-700">Lent</span>
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </>
       ) : (
         <div className="h-[300px] flex flex-col items-center justify-center text-gray-400">
