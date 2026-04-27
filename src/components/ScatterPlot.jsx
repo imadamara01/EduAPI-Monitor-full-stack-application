@@ -70,25 +70,7 @@ const ScatterPlot = ({ data }) => {
       .append('title')
       .text(d => `${d.title}\nTaille: ${d.size} octets\nTemps: ${d.responseTime.toFixed(2)}ms\nRatio: ${(d.ratio * 1000).toFixed(2)}`);
 
-    // Légende couleurs
-    const legend = [
-      { color: '#ef4444', label: '⚠ Lent à charger' },
-      { color: '#f59e0b', label: '⏱ Chargement moyen' },
-      { color: '#10b981', label: '✅ Chargement rapide' }
-    ];
-    legend.forEach((item, i) => {
-      svg.append('circle')
-        .attr('cx', 10)
-        .attr('cy', i * 20)
-        .attr('r', 6)
-        .attr('fill', item.color);
-      svg.append('text')
-        .attr('x', 22)
-        .attr('y', i * 20 + 4)
-        .style('font-size', '11px')
-        .style('fill', '#6b7280')
-        .text(item.label);
-    });
+    // Légende supprimée du SVG → déplacée en HTML en dessous
 
     svg.append('text')
       .attr('x', width / 2)
@@ -122,9 +104,66 @@ const ScatterPlot = ({ data }) => {
         </h3>
       </div>
       {data && data.length > 0 ? (
-        <div className="overflow-x-auto">
-          <svg ref={svgRef}></svg>
-        </div>
+        <>
+          <div className="overflow-x-auto">
+            <svg ref={svgRef}></svg>
+          </div>
+
+          {/* Légende */}
+          <div className="flex flex-wrap justify-center gap-4 mt-3 mb-4">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <span className="text-xs text-gray-600">⚠ Lent à charger</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-amber-400"></div>
+              <span className="text-xs text-gray-600">⏱ Chargement moyen</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
+              <span className="text-xs text-gray-600">✅ Chargement rapide</span>
+            </div>
+          </div>
+
+          {/* Tableau descriptif */}
+          <div className="overflow-x-auto mt-2">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="bg-gray-50">
+                  <th className="text-left px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Article</th>
+                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Taille (octets)</th>
+                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Temps (ms)</th>
+                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Ratio</th>
+                  <th className="text-center px-3 py-2 text-xs font-semibold text-gray-600 border border-gray-200">Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((d, i) => {
+                  const maxRatio = Math.max(...data.map(x => x.ratio));
+                  const normalized = d.ratio / maxRatio;
+                  const statut = normalized > 0.66
+                    ? { label: '⚠ Lent', bg: 'bg-red-100', text: 'text-red-700' }
+                    : normalized > 0.33
+                    ? { label: '⏱ Moyen', bg: 'bg-amber-100', text: 'text-amber-700' }
+                    : { label: '✅ Rapide', bg: 'bg-emerald-100', text: 'text-emerald-700' };
+                  return (
+                    <tr key={i} className="hover:bg-gray-50 transition-colors">
+                      <td className="px-3 py-2 border border-gray-200 font-medium text-gray-800 truncate max-w-[200px]">{d.title}</td>
+                      <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{d.size.toLocaleString()}</td>
+                      <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{d.responseTime.toFixed(0)}</td>
+                      <td className="px-3 py-2 border border-gray-200 text-center text-gray-600">{(d.ratio * 1000).toFixed(2)}</td>
+                      <td className="px-3 py-2 border border-gray-200 text-center">
+                        <span className={`px-2 py-1 rounded-full text-xs font-semibold ${statut.bg} ${statut.text}`}>
+                          {statut.label}
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </>
       ) : (
         <div className="h-[300px] flex flex-col items-center justify-center text-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#9ca3af" className="mb-3">
