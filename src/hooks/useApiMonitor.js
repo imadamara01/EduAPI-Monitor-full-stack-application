@@ -42,8 +42,11 @@ export const useApiMonitor = () => {
           .map((item, index) => ({
             size: (item.results_count || 1) * 1000,
             responseTime: item.response_time || 0,
-            title: item.query || `Search ${index + 1}`
-          }));
+            title: item.query || `Search ${index + 1}`,
+            ratio: (item.response_time || 0) / ((item.results_count || 1) * 1000)
+          }))
+          .sort((a, b) => b.ratio - a.ratio)
+          .slice(0, 30);
         setScatterData(scatterPoints);
       }
     } catch (error) {
