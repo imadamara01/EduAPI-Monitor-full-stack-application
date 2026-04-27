@@ -72,13 +72,22 @@ const ScatterPlot = ({ data }) => {
 
     // Légende couleurs
     const legend = [
-      { color: '#ef4444', label: 'Anormal' },
-      { color: '#f59e0b', label: 'Moyen' },
-      { color: '#10b981', label: 'Normal' }
+      { color: '#ef4444', label: '⚠ Lent à charger' },
+      { color: '#f59e0b', label: '⏱ Chargement moyen' },
+      { color: '#10b981', label: '✅ Chargement rapide' }
     ];
     legend.forEach((item, i) => {
-      svg.append('circle').attr('cx', width - 120 + i * 45).attr('cy', -5).attr('r', 6).attr('fill', item.color);
-      svg.append('text').attr('x', width - 110 + i * 45).attr('y', -1).style('font-size', '11px').style('fill', '#6b7280').text(item.label);
+      svg.append('circle')
+        .attr('cx', 10)
+        .attr('cy', i * 20)
+        .attr('r', 6)
+        .attr('fill', item.color);
+      svg.append('text')
+        .attr('x', 22)
+        .attr('y', i * 20 + 4)
+        .style('font-size', '11px')
+        .style('fill', '#6b7280')
+        .text(item.label);
     });
 
     svg.append('text')
