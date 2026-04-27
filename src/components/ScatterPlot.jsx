@@ -64,7 +64,7 @@ const ScatterPlot = ({ data }) => {
           .attr('opacity', 0.7);
       })
       .append('title')
-      .text(d => `${d.title}\nTaille: ${d.size} bytes\nTemps: ${d.responseTime.toFixed(2)}ms`);
+      .text(d => `${d.title}\nTaille: ${d.size} octets\nTemps: ${d.responseTime.toFixed(2)}ms\nRatio: ${(d.ratio * 1000).toFixed(2)}`);
 
     svg.append('text')
       .attr('x', width / 2)

@@ -92,18 +92,21 @@ export const useApiMonitor = () => {
 
       // Ajouter des données scatter
       if (result.success && result.data?.length > 0) {
-        const pagePromises = result.data.slice(0, 5).map(page => 
+        const pagePromises = result.data.slice(0, 10).map(page => 
           getPageInfo(page.pageid)
         );
         const pageInfos = await Promise.all(pagePromises);
         
         const newScatterPoints = pageInfos
-          .filter(info => info?.success)
+          .filter(info => info?.success && info.size > 0)
           .map(info => ({
             size: info.size,
             responseTime: info.responseTime,
-            title: info.title
-          }));
+            title: info.title,
+            ratio: info.responseTime / info.size
+          }))
+          .sort((a, b) => b.ratio - a.ratio)
+          .slice(0, 3);
         
         setScatterData(prev => [...prev, ...newScatterPoints].slice(-30));
       }
