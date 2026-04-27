@@ -22,6 +22,14 @@ const ScatterPlot = ({ data }) => {
     const maxSize = d3.max(data, d => d.size) || 1;
     const maxResponseTime = d3.max(data, d => d.responseTime) || 1;
 
+    const maxRatio = d3.max(data, d => d.ratio) || 1;
+    const getColor = (ratio) => {
+      const normalized = ratio / maxRatio;
+      if (normalized > 0.66) return '#ef4444';  // rouge - anormal
+      if (normalized > 0.33) return '#f59e0b';  // orange - moyen
+      return '#10b981';                          // vert - normal
+    };
+
     const x = d3.scaleLinear()
       .domain([0, maxSize])
       .nice()
@@ -49,22 +57,29 @@ const ScatterPlot = ({ data }) => {
       .append('circle')
       .attr('cx', d => x(d.size))
       .attr('cy', d => y(d.responseTime))
-      .attr('r', 6)
-      .attr('fill', '#d7492a')
-      .attr('opacity', 0.7)
+      .attr('r', 7)
+      .attr('fill', d => getColor(d.ratio))
+      .attr('opacity', 0.8)
       .style('cursor', 'pointer')
       .on('mouseover', function() {
-        d3.select(this)
-          .attr('r', 8)
-          .attr('opacity', 1);
+        d3.select(this).attr('r', 10).attr('opacity', 1);
       })
       .on('mouseout', function() {
-        d3.select(this)
-          .attr('r', 6)
-          .attr('opacity', 0.7);
+        d3.select(this).attr('r', 7).attr('opacity', 0.8);
       })
       .append('title')
       .text(d => `${d.title}\nTaille: ${d.size} octets\nTemps: ${d.responseTime.toFixed(2)}ms\nRatio: ${(d.ratio * 1000).toFixed(2)}`);
+
+    // Légende couleurs
+    const legend = [
+      { color: '#ef4444', label: 'Anormal' },
+      { color: '#f59e0b', label: 'Moyen' },
+      { color: '#10b981', label: 'Normal' }
+    ];
+    legend.forEach((item, i) => {
+      svg.append('circle').attr('cx', width - 120 + i * 45).attr('cy', -5).attr('r', 6).attr('fill', item.color);
+      svg.append('text').attr('x', width - 110 + i * 45).attr('y', -1).style('font-size', '11px').style('fill', '#6b7280').text(item.label);
+    });
 
     svg.append('text')
       .attr('x', width / 2)
@@ -72,7 +87,7 @@ const ScatterPlot = ({ data }) => {
       .attr('text-anchor', 'middle')
       .style('fill', '#6b7280')
       .style('font-size', '12px')
-      .text('Taille de la page (bytes)');
+      .text('Taille de la page (octets)');
 
     svg.append('text')
       .attr('transform', 'rotate(-90)')
