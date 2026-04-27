@@ -359,13 +359,18 @@ function App() {
         <div className="container mx-auto px-4 md:px-6 py-3">
           <div className="text-center text-sm text-gray-600">
             <p>
-              Projet de visualisation de données avec{" "}
-              <span className="font-semibold">React</span>,{" "}
-              <span className="font-semibold">D3.js</span> et{" "}
-              <span className="font-semibold">Tailwind CSS</span>
+              <span className="font-semibold">React</span> •{" "}
+              <span className="font-semibold">D3.js</span> •{" "}
+              <span className="font-semibold">Tailwind CSS</span> •{" "}
+              <span className="font-semibold">Firebase</span> •{" "}
+              <span className="font-semibold">Cloud Functions</span> •{" "}
+              <span className="font-semibold">Firestore</span> •{" "}
+              <span className="font-semibold">Vite</span> •{" "}
+              <span className="font-semibold">Axios</span> •{" "}
+              <span className="font-semibold">Wikipedia API</span>
             </p>
             <p className="text-xs text-gray-500 mt-1">
-              API: Wikipedia | Données en temps réel | Créé pour UM6P
+              Créé pour Capgemini Morocco
             </p>
           </div>
         </div>
