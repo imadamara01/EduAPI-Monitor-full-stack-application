@@ -113,15 +113,15 @@ const ScatterPlot = ({ data }) => {
           <div className="flex flex-wrap justify-center gap-4 mt-3 mb-4">
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-red-500"></div>
-              <span className="text-xs text-gray-600">⚠ Lent à charger</span>
+              <span className="text-xs text-gray-600">Lent à charger</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-amber-400"></div>
-              <span className="text-xs text-gray-600">⏱ Chargement moyen</span>
+              <span className="text-xs text-gray-600">Chargement moyen</span>
             </div>
             <div className="flex items-center gap-2">
               <div className="w-3 h-3 rounded-full bg-emerald-500"></div>
-              <span className="text-xs text-gray-600">✅ Chargement rapide</span>
+              <span className="text-xs text-gray-600">Chargement rapide</span>
             </div>
           </div>
 
@@ -142,10 +142,10 @@ const ScatterPlot = ({ data }) => {
                   const maxRatio = Math.max(...data.map(x => x.ratio));
                   const normalized = d.ratio / maxRatio;
                   const statut = normalized > 0.66
-                    ? { label: '⚠ Lent', bg: 'bg-red-100', text: 'text-red-700' }
+                    ? { label: 'Lent', bg: 'bg-red-100', text: 'text-red-700' }
                     : normalized > 0.33
-                    ? { label: '⏱ Moyen', bg: 'bg-amber-100', text: 'text-amber-700' }
-                    : { label: '✅ Rapide', bg: 'bg-emerald-100', text: 'text-emerald-700' };
+                    ? { label: 'Moyen', bg: 'bg-amber-100', text: 'text-amber-700' }
+                    : { label: 'Rapide', bg: 'bg-emerald-100', text: 'text-emerald-700' };
                   return (
                     <tr key={i} className="hover:bg-gray-50 transition-colors">
                       <td className="px-3 py-2 border border-gray-200 font-medium text-gray-800 truncate max-w-[200px]">{d.title}</td>
